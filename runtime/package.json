@@ -1,0 +1,22 @@
+{
+  "name": "@pleton/runtime",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild ./src/cmd.ts --bundle --platform=node --outfile=./dist/cmd.cjs --packages=external"
+  },
+  "bin": {
+    "pleton": "./dist/cmd.cjs"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "prettier": "3.9.10"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "esbuild": "^0.28.2",
+    "reflect-metadata": "^0.2.2"
+  }
+}

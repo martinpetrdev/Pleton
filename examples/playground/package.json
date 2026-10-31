@@ -2,10 +2,16 @@
   "name": "playground",
   "private": true,
   "scripts": {
-    "start": "echo Hey!"
+    "start": "pleton"
+  },
+  "dependencies": {
+    "@pleton/core": "workspace:*",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
-    "@types/node": "latest"
+    "@swc/core": "^1.16.20",
+    "@types/node": "latest",
+    "@pleton/runtime": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^7.0.2"

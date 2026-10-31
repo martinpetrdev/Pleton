@@ -1,3 +1,7 @@
 packages:
-  - libs/
-  - examples/
+  - libs/*
+  - examples/*
+  - runtime
+allowBuilds:
+  '@swc/core': true
+  esbuild: true

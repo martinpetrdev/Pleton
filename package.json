@@ -2,7 +2,8 @@
   "name": "pleton",
   "private": false,
   "scripts": {
-    "example:playground": "cd examples/playground && pnpm run start"
+    "example:playground": "cd examples/playground && pnpm run start",
+    "build": "cd ./runtime && pnpm build && cd ../libs/core && pnpm build"
   },
   "devDependencies": {
     "@types/node": "latest"
