@@ -1,0 +1,13 @@
+{
+  "name": "playground",
+  "private": true,
+  "scripts": {
+    "start": "echo Hey!"
+  },
+  "devDependencies": {
+    "@types/node": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

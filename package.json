@@ -1,0 +1,13 @@
+{
+  "name": "pleton",
+  "private": false,
+  "scripts": {
+    "example:playground": "cd examples/playground && pnpm run start"
+  },
+  "devDependencies": {
+    "@types/node": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
