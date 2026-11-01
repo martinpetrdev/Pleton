@@ -33,6 +33,10 @@ export abstract class PletonApplication {
     for (const dep of this.discovery.injectableClass()) {
       this.di.register(DependencyType.Injectable, dep);
     }
+
+    for (const dep of this.discovery.restControllerClass()) {
+      this.di.register(DependencyType.RestController, dep);
+    }
   }
 
   public getInjectable<T extends Class<unknown, []>>(type: T) {

@@ -5,14 +5,15 @@
     "start": "pleton"
   },
   "dependencies": {
-    "@pleton/core": "workspace:*",
     "@pleton/adapter-hono": "workspace:*",
+    "@pleton/core": "workspace:*",
+    "hono": "^4.13.16",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@pleton/runtime": "workspace:*",
     "@swc/core": "^1.16.20",
-    "@types/node": "latest",
-    "@pleton/runtime": "workspace:*"
+    "@types/node": "latest"
   },
   "peerDependencies": {
     "typescript": "^7.0.2"

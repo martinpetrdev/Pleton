@@ -3,6 +3,7 @@ import { Class, ClassInstance } from "../types";
 
 export enum DependencyType {
   Injectable,
+  RestController,
 }
 
 export class PletonDIContainer {
@@ -11,6 +12,7 @@ export class PletonDIContainer {
     [key in DependencyType]: Map<Class<unknown, []>, unknown>;
   } = {
     [DependencyType.Injectable]: new Map(),
+    [DependencyType.RestController]: new Map(),
   };
   private readonly resolving = new Set<Class<unknown, []>>();
 
@@ -63,5 +65,17 @@ export class PletonDIContainer {
     }
 
     return instance as ClassInstance<C>;
+  }
+
+  public getAll<C extends Class<object, []>>(depType: DependencyType) {
+    const deps = this.dependencies[depType];
+    const instances: ClassInstance<C>[] = [];
+
+    for (const [depClass] of deps) {
+      // TODO: Speed up by creating instance right here or reusing if present in deps ([class, instance])
+      instances.push(this.get(depType, depClass as C)!);
+    }
+
+    return instances;
   }
 }

@@ -24,6 +24,9 @@ importers:
       '@pleton/core':
         specifier: workspace:*
         version: link:../../libs/core
+      hono:
+        specifier: ^4.13.16
+        version: 4.13.16
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2

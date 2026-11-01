@@ -7,7 +7,7 @@ import {
   RouteContext,
   RouteHandler,
 } from "@pleton/core";
-import { Hono, HonoRequest } from "hono";
+import { Context, Hono, HonoRequest } from "hono";
 import { serve } from "@hono/node-server";
 
 export class PletonHonoAdapter extends PletonHTTPAdapter {
@@ -33,21 +33,25 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
     );
   }
 
-  private notFoundErrorHandler(ctx: RouteContext) {
+  private async notFoundErrorHandler(
+    ctx: RouteContext,
+  ): Promise<PletonHTTPResponse<any>> {
     throw new PletonHTTPError(
       "The requested resource was not found",
       HTTPStatusCode.NotFound,
     );
   }
 
-  private internalServerErrorHandler(ctx: RouteContext) {
+  private internalServerErrorHandler(
+    ctx: RouteContext,
+  ): Promise<PletonHTTPResponse<any>> {
     throw new PletonHTTPError(
       "Internal server error",
       HTTPStatusCode.InternalServerError,
     );
   }
 
-  protected addRouteHandler<T>(
+  $addRouteHandler<T>(
     method: HTTPMethod,
     path: string,
     handler: RouteHandler<T>,
@@ -57,7 +61,10 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
     });
   }
 
-  private async handleRequest<T>(handler: RouteHandler<T>, c: HonoRequest) {
+  private async handleRequest<T>(
+    handler: RouteHandler<T>,
+    c: Context,
+  ): Promise<Response> {
     let response: PletonHTTPResponse<any>;
     try {
       response = await handler(this.getContext(c)).catch((err) => {
@@ -80,10 +87,12 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
       return c.json(response.data, response.statusCode as any);
     else if (response.isText)
       return c.text(response.data as string, response.statusCode as any);
+    else if (response.isHTML)
+      return c.html(response.data, response.statusCode as any);
     else return c.body(response.data as any, response.statusCode as any);
   }
 
-  private getContext(honoCtx: HonoRequest) {
+  private getContext(honoCtx: Context) {
     return {};
   }
 }

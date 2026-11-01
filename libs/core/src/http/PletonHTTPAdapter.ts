@@ -15,7 +15,7 @@ export type RouteHandler<T> = (
 
 export abstract class PletonHTTPAdapter {
   abstract listen(port: number): Promise<void>;
-  protected abstract addRouteHandler<T>(
+  abstract $addRouteHandler<T>(
     method: HTTPMethod,
     path: string,
     handler: RouteHandler<T>,

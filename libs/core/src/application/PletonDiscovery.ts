@@ -56,4 +56,12 @@ export class PletonDiscovery {
 
     return classes.map((c) => this._entities.get(c)!);
   }
+
+  public restControllerClass() {
+    const classes = this.find(
+      (e) => Reflection.getClassDecoration(e, "isRestController") === true,
+    );
+
+    return classes.map((c) => this._entities.get(c)!);
+  }
 }

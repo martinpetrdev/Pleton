@@ -18,7 +18,7 @@ export class Builder {
   private static async findSourceFiles(dir: string): Promise<string[]> {
     const entries: Set<string> = new Set();
 
-    for await (const entry of fs.glob("**/*.ts", {
+    for await (const entry of fs.glob("**/*.{ts,tsx}", {
       cwd: dir,
     })) {
       entries.add(entry);

@@ -11,7 +11,21 @@ export class Reflection {
     };
   }
 
+  static decorateMethod<T>(
+    decorator: (set: SetReflectionMetadataFunction) => void,
+  ) {
+    return (cls: any, paramName: string, descriptor: PropertyDescriptor) => {
+      decorator((key, value) => {
+        this.setMetadata(descriptor.value, key, value);
+      });
+    };
+  }
+
   static getClassDecoration(target: any, key: string) {
+    return this.getMetadata(target, key);
+  }
+
+  static getMethodDecoration(target: any, key: string) {
     return this.getMetadata(target, key);
   }
 

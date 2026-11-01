@@ -6,5 +6,8 @@ import {
 } from "./internal";
 
 export function inject<C extends Class<unknown, []>>(type: C) {
-  return PletonDIContainer.instance.get(DependencyType.Injectable, type);
+  const dep = PletonDIContainer.instance.get(DependencyType.Injectable, type);
+  if (!dep) throw new Error(`Could not find dependency ${type.name}`);
+
+  return dep;
 }

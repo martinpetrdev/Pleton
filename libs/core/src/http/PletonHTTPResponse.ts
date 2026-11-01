@@ -16,22 +16,28 @@ export class PletonHTTPResponse<T> {
   constructor(
     public readonly statusCode: number,
     public readonly data: T,
+    public readonly type?: "html",
   ) {}
 
+  public get isHTML() {
+    return this.type === "html";
+  }
+
   public get isJSON() {
-    return typeof this.data === "object";
+    return !this.type && typeof this.data === "object";
   }
 
   public get isText() {
     return (
-      typeof this.data === "string" ||
-      typeof this.data === "number" ||
-      typeof this.data === "boolean"
+      !this.type &&
+      (typeof this.data === "string" ||
+        typeof this.data === "number" ||
+        typeof this.data === "boolean")
     );
   }
 
   public get isUnknown() {
-    return !this.isJSON && !this.isText;
+    return !this.isJSON && !this.isText && !this.isHTML;
   }
 }
 
@@ -53,5 +59,11 @@ export class PletonHTTPError extends Error {
       error: HTTPStatusName[this.statusCode],
       message: this._message,
     });
+  }
+}
+
+export class OkResponse<T> extends PletonHTTPResponse<T> {
+  constructor(data: T, type?: "html") {
+    super(HTTPStatusCode.Ok, data, type);
   }
 }
