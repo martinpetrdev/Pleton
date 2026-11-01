@@ -2,11 +2,11 @@ import {
   HTTPStatusCode,
   inject,
   OkResponse,
-  PletonHTTPResponse,
+  PletonHTTPResponse, RestJsonBody,
   RestController, RestDelete,
   RestGet, RestPatch,
   RestPost, RestPut,
-  RestQuery
+  RestQuery, RestFormDataBody, RestTextBody
 } from "@pleton/core";
 import {GreetingService} from "./greeting.service";
 
@@ -20,9 +20,9 @@ export class GreetingController {
   }
 
   @RestPost("/")
-  async post() {
+  async post(@RestTextBody() body: string) {
     return new OkResponse({
-      status: "went fine"
+      myBody: body
     })
   }
 }

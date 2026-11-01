@@ -82,15 +82,17 @@ export class PletonHTTP {
           async (ctx) => {
             const argCount =
               Reflection.getMethodDecoration(method, "paramCount") ?? 0;
-            const args = new Array(argCount).fill(null).map((_, i) => {
-              const argMethod = Reflection.getParameterDecoration(
-                method,
-                i,
-                "resolve",
-              ) as (ctx: RouteContext) => any;
+            const args = await Promise.all(
+              new Array(argCount).fill(null).map(async (_, i) => {
+                const argMethod = Reflection.getParameterDecoration(
+                  method,
+                  i,
+                  "resolve",
+                ) as (ctx: RouteContext) => any;
 
-              return argMethod?.(ctx);
-            });
+                return await argMethod?.(ctx);
+              }),
+            );
 
             const res = await method.bind(controller)(...args);
 

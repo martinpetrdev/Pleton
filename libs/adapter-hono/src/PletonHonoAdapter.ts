@@ -67,7 +67,7 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
   ): Promise<Response> {
     let response: PletonHTTPResponse<any>;
     try {
-      response = await handler(this.getContext(c)).catch((err) => {
+      response = await handler(await this.getContext(c)).catch((err) => {
         if (err instanceof PletonHTTPError) return err.response;
 
         // TODO: Return 500?
@@ -92,9 +92,19 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
     else return c.body(response.data as any, response.statusCode as any);
   }
 
-  private getContext(honoCtx: Context) {
+  private async getContext(honoCtx: Context) {
+    const contentType = honoCtx.req.header("Content-Type");
+
     return {
       query: honoCtx.req.query(),
+      body: {
+        getJSON: () => honoCtx.req.json(),
+        getText: () => honoCtx.req.text(),
+        getFormData: () => honoCtx.req.formData(),
+        getBytes: () => honoCtx.req.bytes(),
+        getArrayBuffer: () => honoCtx.req.arrayBuffer(),
+        getBlob: () => honoCtx.req.blob(),
+      },
     };
   }
 }
