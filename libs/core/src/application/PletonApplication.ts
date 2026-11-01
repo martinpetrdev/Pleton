@@ -1,22 +1,30 @@
 import { PletonHTTP } from "../http";
 import { DependencyType, PletonDIContainer } from "../internal";
 import { PletonDiscovery } from "./PletonDiscovery";
+import { PletonLogger } from "../logger/PletonLogger";
 
 export abstract class PletonApplication {
   public readonly http = new PletonHTTP();
   private readonly di = new PletonDIContainer();
   private readonly discovery: PletonDiscovery;
 
+  private readonly logger: PletonLogger;
+
   constructor() {
     if (!PletonDiscovery.instance)
       throw new Error("PletonDiscovery is not instantiated");
 
     this.discovery = PletonDiscovery.instance;
+    this.logger = new PletonLogger(this.constructor.name); // takes name of the child class
   }
 
   public async init() {
+    this.logger.info("Initializing Pleton application...");
+
     this.di.init();
     this.registerDependencies();
+
+    this.logger.info("Application initialized.");
 
     await this.run();
   }
