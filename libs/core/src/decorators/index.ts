@@ -2,4 +2,8 @@ export * from "./Application";
 export * from "./Injectable";
 export * from "./RestController";
 export * from "./RestGet";
+export * from "./RestPost";
+export * from "./RestPut";
+export * from "./RestPatch";
+export * from "./RestDelete";
 export * from "./RestQuery";
