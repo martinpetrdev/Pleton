@@ -1,7 +1,12 @@
-import { Reflection } from "../internal";
+import { PletonDIContainer, Reflection } from "../internal";
 
 export class PletonDiscovery {
-  private _entities = new Map<string, string>();
+  private readonly _entities = new Map<string, any>();
+  private static _instance: PletonDiscovery | null = null;
+
+  public static get instance() {
+    return PletonDiscovery._instance;
+  }
 
   constructor(mods: {
     [key: string]: {
@@ -15,6 +20,8 @@ export class PletonDiscovery {
         this._entities.set(`${key}#${name}`, entity);
       }
     }
+
+    PletonDiscovery._instance = this;
   }
 
   private find(filter: (entity: any) => boolean) {
@@ -40,5 +47,13 @@ export class PletonDiscovery {
       );
 
     return this._entities.get(classes[0]);
+  }
+
+  public injectableClass() {
+    const classes = this.find(
+      (e) => Reflection.getClassDecoration(e, "isInjectable") === true,
+    );
+
+    return classes.map((c) => this._entities.get(c)!);
   }
 }
