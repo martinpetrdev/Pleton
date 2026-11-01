@@ -3,7 +3,7 @@
   "private": false,
   "scripts": {
     "example:playground": "cd examples/playground && pnpm run start",
-    "build": "cd ./runtime && pnpm build && cd ../libs/core && pnpm build"
+    "build": "cd ./runtime && pnpm build && cd ../libs/core && pnpm build && cd ../adapter-hono && pnpm build"
   },
   "devDependencies": {
     "@types/node": "latest"

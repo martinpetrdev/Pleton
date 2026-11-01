@@ -18,6 +18,9 @@ importers:
 
   examples/playground:
     dependencies:
+      '@pleton/adapter-hono':
+        specifier: workspace:*
+        version: link:../../libs/adapter-hono
       '@pleton/core':
         specifier: workspace:*
         version: link:../../libs/core
@@ -37,6 +40,34 @@ importers:
       '@types/node':
         specifier: latest
         version: 26.6.6
+
+  libs/adapter-hono:
+    dependencies:
+      '@hono/node-server':
+        specifier: ^2.1.5
+        version: 2.1.5(hono@4.13.16)
+      '@pleton/core':
+        specifier: workspace:*
+        version: link:../core
+      hono:
+        specifier: ^4.13.16
+        version: 4.13.16
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+    devDependencies:
+      '@types/node':
+        specifier: latest
+        version: 26.6.6
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      prettier:
+        specifier: 3.9.10
+        version: 3.9.10
 
   libs/core:
     dependencies:
@@ -233,6 +264,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@hono/node-server@2.1.5':
+    resolution: {integrity: sha512-MgP/I06GdvsilDspMk/qmRzpk8LOUStP6jFAbSRi40W09DhoyUn+Mj7eyKICPqeYKybOjVFLVIAQzvu1bfIa7Q==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: ^4 || ^5.0.0-0
 
   '@swc/core-darwin-arm64@1.16.20':
     resolution: {integrity: sha512-i7NFSDnuE6tdBvBgmoVKKmburgcwZt/FZK2IusJaVGrjFrMUC1hrgE3RI+Kt9RhYM7vHvQj0W9j53zSxKEMbWQ==}
@@ -455,6 +492,10 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  hono@4.13.16:
+    resolution: {integrity: sha512-AOLOEhvrV+iH92xXCnFr/5+3KjPKcI3xP63XJtX5spAnkznPdHijlIsUTpi7/9EhWqrTCekw5c5zh1K+YsVw7A==}
+    engines: {node: '>=16.9.0'}
+
   prettier@3.9.10:
     resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
     engines: {node: '>=14'}
@@ -550,6 +591,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.2':
     optional: true
+
+  '@hono/node-server@2.1.5(hono@4.13.16)':
+    dependencies:
+      hono: 4.13.16
 
   '@swc/core-darwin-arm64@1.16.20':
     optional: true
@@ -703,6 +748,8 @@ snapshots:
       '@esbuild/win32-arm64': 0.28.2
       '@esbuild/win32-ia32': 0.28.2
       '@esbuild/win32-x64': 0.28.2
+
+  hono@4.13.16: {}
 
   prettier@3.9.10: {}
 

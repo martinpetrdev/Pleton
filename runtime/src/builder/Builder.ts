@@ -1,4 +1,5 @@
 import * as fs from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 import { Project } from "../runtime/Project";
 import { build } from "esbuild";
 
@@ -53,15 +54,26 @@ app.init();`;
       outfile: outputPath,
       bundle: true,
       // Bundle @pleton/* (shipped as raw TS), keep other packages external.
+      // Externals are pinned to the file resolved from their importer, since
+      // deps of inlined @pleton/* packages aren't visible from the project dir.
       plugins: [
         {
           name: "pleton-externals",
           setup(b) {
-            b.onResolve({ filter: /^[^./]/ }, (args) =>
-              args.path.startsWith("@pleton/")
-                ? undefined
-                : { path: args.path, external: true },
-            );
+            b.onResolve({ filter: /^[^./]/ }, async (args) => {
+              if (args.path.startsWith("@pleton/") || args.pluginData) {
+                return undefined;
+              }
+              const r = await b.resolve(args.path, {
+                kind: args.kind,
+                importer: args.importer,
+                resolveDir: args.resolveDir,
+                pluginData: true,
+              });
+              return r.errors.length || r.external
+                ? { path: args.path, external: true }
+                : { path: pathToFileURL(r.path).href, external: true };
+            });
           },
         },
       ],

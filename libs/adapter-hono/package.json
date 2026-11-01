@@ -1,0 +1,31 @@
+{
+  "name": "@pleton/adapter-hono",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "esbuild ./src/index.ts --bundle --platform=node --outfile=./dist/index.mjs --packages=external"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./dist/index.mjs",
+      "default": "./src/index.ts"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "prettier": "3.9.10",
+    "esbuild": "^0.28.2"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2",
+    "hono": "^4.13.16",
+    "@hono/node-server": "^2.1.5",
+    "@pleton/core": "workspace:*"
+  }
+}

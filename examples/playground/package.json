@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@pleton/core": "workspace:*",
+    "@pleton/adapter-hono": "workspace:*",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
