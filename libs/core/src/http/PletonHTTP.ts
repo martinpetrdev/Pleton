@@ -1,6 +1,7 @@
 import {
   HTTPMethod,
   PletonHTTPAdapter,
+  RouteContext,
   RouteHandler,
 } from "./PletonHTTPAdapter";
 import {
@@ -12,6 +13,7 @@ import {
 } from "../internal";
 import { PletonLogger } from "../logger/PletonLogger";
 import { fixURLPath, joinURLPaths } from "./URL";
+import { PletonHTTPResponse } from "./PletonHTTPResponse";
 
 export class PletonHTTP {
   private _adapter: PletonHTTPAdapter | null = null;
@@ -59,7 +61,9 @@ export class PletonHTTP {
       )) {
         if (prop === "constructor") continue; // Skipped - never a route
 
-        const method = controller[prop as keyof typeof controller]!;
+        const method = controller[prop as keyof typeof controller]! as (
+          ...args: any[]
+        ) => Promise<PletonHTTPResponse<any>>;
         const isRoute = Reflection.getMethodDecoration(method, "isRestRoute");
         if (!isRoute) continue;
 
@@ -75,7 +79,23 @@ export class PletonHTTP {
         this._adapter!.$addRouteHandler(
           httpMethod as HTTPMethod,
           fullPath,
-          (method as RouteHandler<any>).bind(controller),
+          async (ctx) => {
+            const argCount =
+              Reflection.getMethodDecoration(method, "paramCount") ?? 0;
+            const args = new Array(argCount).fill(null).map((_, i) => {
+              const argMethod = Reflection.getParameterDecoration(
+                method,
+                i,
+                "resolve",
+              ) as (ctx: RouteContext) => any;
+
+              return argMethod?.(ctx);
+            });
+
+            const res = await method.bind(controller)(...args);
+
+            return res;
+          },
         );
 
         this.logger.info(

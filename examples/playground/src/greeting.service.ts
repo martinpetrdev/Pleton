@@ -5,9 +5,7 @@ import {NameService} from "./name.service";
 export class GreetingService {
   private nameSvc = inject(NameService)!;
 
-  public getGreeting() {
-    const name = this.nameSvc.getName();
-
-    return `Hello, ${name}!`
+  public getGreeting(name: string, age: number) {
+    return `Hello, ${name}! You are ${age} years old!`
   }
 }

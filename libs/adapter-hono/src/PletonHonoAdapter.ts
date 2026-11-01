@@ -93,6 +93,8 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
   }
 
   private getContext(honoCtx: Context) {
-    return {};
+    return {
+      query: honoCtx.req.query(),
+    };
   }
 }

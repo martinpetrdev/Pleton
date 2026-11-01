@@ -8,7 +8,11 @@ export enum HTTPMethod {
   DELETE = "delete",
 }
 
-export type RouteContext = {};
+export interface RouteContext {
+  query: {
+    [key: string]: string;
+  };
+}
 export type RouteHandler<T> = (
   ctx: RouteContext,
 ) => Promise<PletonHTTPResponse<T>>;
