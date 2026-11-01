@@ -97,6 +97,7 @@ export class PletonHonoAdapter extends PletonHTTPAdapter {
 
     return {
       query: honoCtx.req.query(),
+      params: honoCtx.req.param(),
       body: {
         getJSON: () => honoCtx.req.json(),
         getText: () => honoCtx.req.text(),

@@ -12,6 +12,9 @@ export interface RouteContext {
   query: {
     [key: string]: string;
   };
+  params: {
+    [key: string]: string;
+  };
   body: {
     getJSON: () => Promise<Record<string, any>>;
     getText: () => Promise<string>;

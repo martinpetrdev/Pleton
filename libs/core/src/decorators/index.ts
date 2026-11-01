@@ -13,3 +13,4 @@ export * from "./RestFormDataBody";
 export * from "./RestByteBody";
 export * from "./RestArrayBufferBody";
 export * from "./RestBlobBody";
+export * from "./RestParam";
