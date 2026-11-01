@@ -1,5 +1,5 @@
 import { PletonHTTP } from "../http";
-import { DependencyType, PletonDIContainer } from "../internal";
+import { Class, DependencyType, PletonDIContainer } from "../internal";
 import { PletonDiscovery } from "./PletonDiscovery";
 import { PletonLogger } from "../logger/PletonLogger";
 
@@ -33,6 +33,10 @@ export abstract class PletonApplication {
     for (const dep of this.discovery.injectableClass()) {
       this.di.register(DependencyType.Injectable, dep);
     }
+  }
+
+  public getInjectable<T extends Class<unknown, []>>(type: T) {
+    return this.di.get(DependencyType.Injectable, type);
   }
 
   abstract run(): Promise<void>;
