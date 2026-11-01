@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import {PletonApplication, Application} from "@pleton/core"
+import {PletonApplication, Application, PletonHTTPError, PletonHTTPResponse, HTTPStatusCode} from "@pleton/core"
 import {PletonHonoAdapter} from "@pleton/adapter-hono";
 
 @Application
