@@ -14,19 +14,20 @@ import {
 import { PletonLogger } from "../logger/PletonLogger";
 import { fixURLPath, joinURLPaths } from "./URL";
 import { PletonHTTPResponse } from "./PletonHTTPResponse";
+import { PletonApplication } from "../application";
 
 export class PletonHTTP {
   private _adapter: PletonHTTPAdapter | null = null;
 
   private readonly logger = new PletonLogger("PletonHTTP");
 
-  constructor() {}
+  constructor(private readonly application: PletonApplication) {}
 
   public useAdapter(adapter: PletonHTTPAdapter) {
     this._adapter = adapter;
 
     this.registerControllers(
-      PletonDIContainer.instance.getAll(DependencyType.RestController),
+      this.application["di"].getAll(DependencyType.RestController),
     );
   }
 
@@ -45,12 +46,21 @@ export class PletonHTTP {
     controllers: ClassInstance<C>[],
   ) {
     for (const controller of controllers) {
-      const prefix = fixURLPath(
+      let prefix = fixURLPath(
         Reflection.getClassDecoration(
           controller.constructor,
           "restControllerPrefix",
         ),
       );
+      const version = Reflection.getClassDecoration(
+        controller.constructor,
+        "version",
+      );
+      if (this.application["_defaultVersioningVersion"] !== null)
+        prefix = joinURLPaths(
+          fixURLPath(version ?? this.application["_defaultVersioningVersion"]),
+          prefix,
+        );
 
       this.logger.info(
         `Registering REST controller ${controller.constructor.name} (${prefix})...`,

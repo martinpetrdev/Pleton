@@ -4,9 +4,11 @@ import { PletonDiscovery } from "./PletonDiscovery";
 import { PletonLogger } from "../logger/PletonLogger";
 
 export abstract class PletonApplication {
-  public readonly http = new PletonHTTP();
+  public readonly http = new PletonHTTP(this);
   private readonly di = new PletonDIContainer();
   private readonly discovery: PletonDiscovery;
+
+  private _defaultVersioningVersion: string | null = null;
 
   private readonly logger: PletonLogger;
 
@@ -37,6 +39,13 @@ export abstract class PletonApplication {
     for (const dep of this.discovery.restControllerClass()) {
       this.di.register(DependencyType.RestController, dep);
     }
+  }
+
+  public enableVersioning(defaultVersion: string) {
+    if (this._defaultVersioningVersion)
+      throw new Error("Versioning is already enabled!");
+
+    this._defaultVersioningVersion = defaultVersion;
   }
 
   public getInjectable<T extends Class<unknown, []>>(type: T) {
