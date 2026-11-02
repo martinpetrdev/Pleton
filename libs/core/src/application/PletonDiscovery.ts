@@ -64,4 +64,12 @@ export class PletonDiscovery {
 
     return classes.map((c) => this._entities.get(c)!);
   }
+
+  public restGuardClass() {
+    const classes = this.find(
+      (e) => Reflection.getClassDecoration(e, "isRestGuard") === true,
+    );
+
+    return classes.map((c) => this._entities.get(c)!);
+  }
 }

@@ -15,3 +15,5 @@ export * from "./RestArrayBufferBody";
 export * from "./RestBlobBody";
 export * from "./RestParam";
 export * from "./Version";
+export * from "./RestGuard";
+export * from "./UseRestGuard";

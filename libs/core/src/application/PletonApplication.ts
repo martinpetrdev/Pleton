@@ -39,6 +39,10 @@ export abstract class PletonApplication {
     for (const dep of this.discovery.restControllerClass()) {
       this.di.register(DependencyType.RestController, dep);
     }
+
+    for (const dep of this.discovery.restGuardClass()) {
+      this.di.register(DependencyType.RestGuard, dep);
+    }
   }
 
   public enableVersioning(defaultVersion: string) {

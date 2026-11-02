@@ -1,5 +1,7 @@
 export enum HTTPStatusCode {
   Ok = 200,
+  Unauthorized = 401,
+  Forbidden = 403,
   NotFound = 404,
   InternalServerError = 500,
 }
@@ -7,8 +9,10 @@ export enum HTTPStatusCode {
 const HTTPStatusName: {
   [key in HTTPStatusCode]: string;
 } = {
-  [HTTPStatusCode.NotFound]: "NOT_FOUND",
   [HTTPStatusCode.Ok]: "OK",
+  [HTTPStatusCode.Unauthorized]: "UNAUTHORIZED",
+  [HTTPStatusCode.Forbidden]: "FORBIDDEN",
+  [HTTPStatusCode.NotFound]: "NOT_FOUND",
   [HTTPStatusCode.InternalServerError]: "INTERNAL_SERVER_ERROR",
 };
 

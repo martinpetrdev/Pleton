@@ -4,6 +4,7 @@ import { Class, ClassInstance } from "../types";
 export enum DependencyType {
   Injectable,
   RestController,
+  RestGuard,
 }
 
 export class PletonDIContainer {
@@ -13,6 +14,7 @@ export class PletonDIContainer {
   } = {
     [DependencyType.Injectable]: new Map(),
     [DependencyType.RestController]: new Map(),
+    [DependencyType.RestGuard]: new Map(),
   };
   private readonly resolving = new Set<Class<unknown, []>>();
 

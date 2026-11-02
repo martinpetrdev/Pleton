@@ -2,19 +2,17 @@ import {
   HTTPMethod,
   PletonHTTPAdapter,
   RouteContext,
-  RouteHandler,
 } from "./PletonHTTPAdapter";
-import {
-  Class,
-  ClassInstance,
-  DependencyType,
-  PletonDIContainer,
-  Reflection,
-} from "../internal";
+import { Class, ClassInstance, DependencyType, Reflection } from "../internal";
 import { PletonLogger } from "../logger/PletonLogger";
 import { fixURLPath, joinURLPaths } from "./URL";
-import { PletonHTTPResponse } from "./PletonHTTPResponse";
+import {
+  HTTPStatusCode,
+  PletonHTTPError,
+  PletonHTTPResponse,
+} from "./PletonHTTPResponse";
 import { PletonApplication } from "../application";
+import { IGuard } from "../types";
 
 export class PletonHTTP {
   private _adapter: PletonHTTPAdapter | null = null;
@@ -62,6 +60,11 @@ export class PletonHTTP {
           prefix,
         );
 
+      const guards = (Reflection.getClassDecoration(
+        controller.constructor,
+        "restGuards",
+      ) ?? new Set()) as Set<Class<IGuard, []>>;
+
       this.logger.info(
         `Registering REST controller ${controller.constructor.name} (${prefix})...`,
       );
@@ -104,9 +107,11 @@ export class PletonHTTP {
               }),
             );
 
-            const res = await method.bind(controller)(...args);
+            return await (async () => {
+              await this.runGuards(ctx, [...guards]);
 
-            return res;
+              return await method.bind(controller)(...args);
+            })();
           },
         );
 
@@ -114,6 +119,36 @@ export class PletonHTTP {
           `Registered REST route ${controller.constructor.name}.${prop} (${fullPath})...`,
         );
       }
+    }
+  }
+
+  private async runGuards(ctx: RouteContext, guards: Class<IGuard, []>[]) {
+    for (const guard of guards) {
+      const ginstance = this.application["di"].get(
+        DependencyType.RestGuard,
+        guard,
+      );
+      if (!ginstance)
+        throw new Error(`Guard with the name ${guard.name} does not exist`);
+
+      const argCount =
+        Reflection.getMethodDecoration(ginstance.handleRequest, "paramCount") ??
+        0;
+      const args = await Promise.all(
+        new Array(argCount).fill(null).map(async (_, i) => {
+          const argMethod = Reflection.getParameterDecoration(
+            ginstance.handleRequest,
+            i,
+            "resolve",
+          ) as (ctx: RouteContext) => any;
+
+          return await argMethod?.(ctx);
+        }),
+      );
+
+      const res = await ginstance.handleRequest(...args);
+      if (!res)
+        throw new PletonHTTPError("Access denied", HTTPStatusCode.Forbidden);
     }
   }
 }
